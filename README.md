@@ -1,4 +1,4 @@
-# Project for Lernfeld-8
+# Kraut und Rüben
 
 ## Contributors:
 
