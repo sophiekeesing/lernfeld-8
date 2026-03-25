@@ -4,7 +4,7 @@ A web app that generates a Spotify playlist tailored to the duration of your tra
 
 ## How It Works
 
-![Trainify Architecture](images/trainify_architecture.png)
+![Trainify Architecture](images/trainify_architecture.jpg)
 
 ## APIs Used
 
