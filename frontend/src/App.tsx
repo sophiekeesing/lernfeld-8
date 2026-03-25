@@ -2,7 +2,9 @@ import { useState } from 'react'
 import reactLogo from './assets/react.svg'
 import viteLogo from './assets/vite.svg'
 import heroImg from './assets/hero.png'
+import { Button } from './components/button.tsx'
 import './App.css'
+import './css/button.css';
 
 function App() {
   const [count, setCount] = useState(0)
@@ -20,6 +22,9 @@ function App() {
           <p>
             Edit <code>src/App.tsx</code> and save to test <code>HMR</code>
           </p>
+          <Button label="Click me!" variant='primary'/>
+          <Button label="Click me!" variant='secondary'/>
+          
         </div>
         <button
           className="counter"
