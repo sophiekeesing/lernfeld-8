@@ -1,16 +1,57 @@
-# Kraut und Rüben
+# 🚆🎵 Trainify
 
-## Contributors:
+A web app that generates a Spotify playlist tailored to the duration of your train journey. Enter your train details, and Trainify picks songs from your liked tracks that fill exactly the travel time.
 
-    - Sophie Keesing
-    - Laura Witulski Morales
-    - Gesine Schlüter
-    - Olena Chekhovska
+## How It Works
 
-The "Fridge-to-Table" Pipeline:
+![Trainify Architecture](images/trainify_architecture.jpg)
 
-- **The Problem:** Having a few random ingredients but no idea what to cook, leading to food waste.
+## APIs Used
 
-- **The Solution:** An enrichment tool where you input 3 ingredients. It hits the Spoonacular API to find recipes, then hits a Nutrition API to append calorie and macro data to each option so you can pick the healthiest one.
+| API                 | Purpose                                         | Endpoint               |
+| ------------------- | ----------------------------------------------- | ---------------------- |
+| **Deutsche Bahn**   | Get departure & arrival times for a train       | `v6.db.transport.rest` |
+| **Spotify Web API** | Fetch liked songs, create playlists, add tracks | `api.spotify.com`      |
 
-- **The Tech:** Python, Spoonacular API, Nutritionix API.
+## Tech Stack
+
+- **Frontend:** React 19 + TypeScript + Vite
+- **Auth:** Spotify OAuth 2.0 (PKCE)
+- **Styling:** CSS
+
+## Getting Started
+
+```bash
+# Clone the repo
+git clone https://github.com/sophiekeesing/lernfeld-8.git
+cd lernfeld-8/frontend
+
+# Install dependencies
+npm install
+
+# Start dev server
+npm run dev
+```
+
+The app will be available at `http://localhost:5173`.
+
+## Project Structure
+
+```
+lernfeld-8/
+├── frontend/
+│   ├── src/
+│   │   ├── App.tsx          # Main application component
+│   │   ├── main.tsx         # Entry point
+│   │   └── assets/          # Images & icons
+│   ├── public/
+│   ├── index.html
+│   ├── vite.config.ts
+│   └── package.json
+├── images/                  # Architecture diagrams
+└── README.md
+```
+
+## License
+
+See [LICENSE](LICENSE) for details.
