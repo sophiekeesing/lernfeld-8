@@ -1,0 +1,165 @@
+.journey-page {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  padding: 40px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.form-container,
+.result-container {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  max-width: 600px;
+  width: 100%;
+  overflow: hidden;
+}
+
+.form-header {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 40px 30px;
+  text-align: center;
+}
+
+.form-header h1 {
+  font-size: 28px;
+  font-weight: 700;
+  margin: 0 0 10px 0;
+}
+
+.form-header p {
+  font-size: 14px;
+  opacity: 0.9;
+  margin: 0;
+  line-height: 1.5;
+}
+
+.error-banner {
+  background: #ffebee;
+  border-left: 4px solid #d32f2f;
+  padding: 15px 20px;
+  margin: 0;
+  color: #c62828;
+  font-size: 14px;
+}
+
+/* Result Styles */
+.result-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 400px;
+}
+
+.result-success {
+  padding: 60px 40px;
+  text-align: center;
+  width: 100%;
+}
+
+.result-success h2 {
+  font-size: 32px;
+  margin: 0 0 30px 0;
+  color: #333;
+}
+
+.result-details {
+  margin-bottom: 40px;
+}
+
+.result-name {
+  font-size: 24px;
+  font-weight: 600;
+  color: #667eea;
+  margin: 0 0 15px 0;
+}
+
+.result-info {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  margin: 15px 0;
+  flex-wrap: wrap;
+}
+
+.badge {
+  display: inline-block;
+  background: #f5f5f5;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #666;
+}
+
+.result-description {
+  font-size: 14px;
+  color: #666;
+  margin: 15px 0 0 0;
+}
+
+.result-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.btn {
+  padding: 12px 28px;
+  border: none;
+  border-radius: 6px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-block;
+  transition: all 0.3s ease;
+}
+
+.btn-primary {
+  background: #1DB954;
+  color: white;
+}
+
+.btn-primary:hover {
+  background: #1ed760;
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(29, 185, 84, 0.3);
+}
+
+.btn-secondary {
+  background: #667eea;
+  color: white;
+}
+
+.btn-secondary:hover {
+  background: #764ba2;
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+}
+
+@media (max-width: 600px) {
+  .form-header {
+    padding: 30px 20px;
+  }
+
+  .form-header h1 {
+    font-size: 24px;
+  }
+
+  .result-success {
+    padding: 40px 20px;
+  }
+
+  .result-success h2 {
+    font-size: 24px;
+  }
+
+  .result-name {
+    font-size: 20px;
+  }
+}

@@ -1,0 +1,113 @@
+.login-container {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%);
+  padding: 20px;
+}
+
+.login-card {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  max-width: 500px;
+  width: 100%;
+  overflow: hidden;
+}
+
+.login-header {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 40px 30px;
+  text-align: center;
+}
+
+.login-header h1 {
+  font-size: 28px;
+  font-weight: 700;
+  margin: 0 0 10px 0;
+}
+
+.login-header p {
+  font-size: 14px;
+  opacity: 0.9;
+  margin: 0;
+}
+
+.login-content {
+  padding: 40px 30px;
+  text-align: center;
+}
+
+.train-icon {
+  width: 60px;
+  height: 60px;
+  color: #667eea;
+  margin-bottom: 30px;
+  opacity: 0.8;
+}
+
+.spotify-login-btn {
+  width: 100%;
+  padding: 14px 20px;
+  background: #1DB954;
+  color: white;
+  border: none;
+  border-radius: 50px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.spotify-login-btn:hover:not(:disabled) {
+  background: #1ed760;
+  transform: translateY(-2px);
+}
+
+.spotify-login-btn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.spotify-icon {
+  width: 24px;
+  height: 24px;
+  fill: currentColor;
+}
+
+.spotify-logo {
+  width: 24px;
+  height: 24px;
+}
+
+.login-info {
+  font-size: 13px;
+  color: #666;
+  line-height: 1.6;
+  margin: 0;
+}
+
+@media (max-width: 600px) {
+  .login-card {
+    border-radius: 8px;
+  }
+
+  .login-header {
+    padding: 30px 20px;
+  }
+
+  .login-header h1 {
+    font-size: 24px;
+  }
+
+  .login-content {
+    padding: 30px 20px;
+  }
+}
