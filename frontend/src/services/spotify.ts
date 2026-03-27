@@ -76,7 +76,7 @@ export async function createPlaylist(
   for (let i = 0; i < trackUris.length; i += 100) {
     const batch = trackUris.slice(i, i + 100);
     const addRes = await fetch(
-      `${SPOTIFY_API}/playlists/${playlist.id}/tracks`,
+      `${SPOTIFY_API}/playlists/${playlist.id}/items`,
       {
         method: "POST",
         headers: {
