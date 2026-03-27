@@ -1,0 +1,189 @@
+.trip-form-page {
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 32px 20px 64px;
+}
+
+.app-header {
+  text-align: center;
+  margin-bottom: 32px;
+}
+
+.app-header h1 {
+  font-size: 36px;
+  margin: 0;
+}
+
+/* Form */
+.trip-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.trip-form label {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-h);
+}
+
+.trip-form label small {
+  font-weight: 400;
+  color: var(--text);
+}
+
+.trip-form input {
+  padding: 12px 14px;
+  font-size: 16px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--bg);
+  color: var(--text-h);
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.trip-form input:focus {
+  border-color: var(--accent);
+}
+
+.form-row {
+  display: flex;
+  gap: 12px;
+  align-items: end;
+}
+
+.form-row label {
+  flex: 1;
+}
+
+.form-row .arrow {
+  font-size: 24px;
+  padding-bottom: 10px;
+  color: var(--text);
+}
+
+.generate-btn {
+  background: #1db954;
+  color: #fff;
+  font-size: 16px;
+  font-weight: 600;
+  padding: 14px;
+  border: none;
+  border-radius: 32px;
+  cursor: pointer;
+  transition:
+    background 0.2s,
+    transform 0.1s;
+  margin-top: 8px;
+}
+
+.generate-btn:hover:not(:disabled) {
+  background: #1ed760;
+  transform: scale(1.02);
+}
+
+.generate-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.error {
+  color: #e53e3e;
+  text-align: center;
+  font-size: 14px;
+}
+
+/* Result */
+.result {
+  margin-top: 40px;
+  text-align: center;
+}
+
+.result h2 {
+  font-size: 24px;
+  margin: 0 0 8px;
+}
+
+.result-meta {
+  color: var(--text);
+  margin-bottom: 16px;
+}
+
+.open-btn {
+  display: inline-block;
+  background: #1db954;
+  color: #fff;
+  font-weight: 600;
+  padding: 12px 28px;
+  border-radius: 32px;
+  text-decoration: none;
+  margin-bottom: 24px;
+  transition: background 0.2s;
+}
+
+.open-btn:hover {
+  background: #1ed760;
+}
+
+/* Track list */
+.track-list {
+  list-style: none;
+  padding: 0;
+  text-align: left;
+}
+
+.track-list li {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.track-num {
+  width: 24px;
+  text-align: right;
+  color: var(--text);
+  font-size: 14px;
+  flex-shrink: 0;
+}
+
+.track-art {
+  width: 40px;
+  height: 40px;
+  border-radius: 4px;
+  flex-shrink: 0;
+}
+
+.track-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.track-name {
+  font-weight: 500;
+  color: var(--text-h);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.track-artist {
+  font-size: 14px;
+  color: var(--text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.track-dur {
+  color: var(--text);
+  font-size: 14px;
+  flex-shrink: 0;
+}
