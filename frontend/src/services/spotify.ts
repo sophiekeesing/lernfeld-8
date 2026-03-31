@@ -46,7 +46,7 @@ export async function fetchMe(
 /** Create a private playlist and add tracks. Returns the playlist URL and whether tracks were added. */
 export async function createPlaylist(
   token: string,
-  userId: string,
+  _userId: string,
   name: string,
   description: string,
   trackUris: string[],
