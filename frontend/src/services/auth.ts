@@ -1,4 +1,4 @@
-const BACKEND_URL = "http://127.0.0.1:3001";
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || "http://127.0.0.1:3001";
 
 export function loginUrl(): string {
   return `${BACKEND_URL}/auth/login`;

@@ -15,4 +15,5 @@ services:
     env_file:
       - ./backend/.env
     volumes:
-      - ./backend/server.js:/app/server.js
+      - ./backend/server.ts:/app/server.ts
+      - ./backend/app.ts:/app/app.ts

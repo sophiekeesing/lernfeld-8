@@ -1,10 +1,8 @@
-import express from "express";
+import express, { Request, Response } from "express";
 import cors from "cors";
 import { readFileSync } from "fs";
 import { createClient } from "db-vendo-client";
 import { profile as dbProfile } from "db-vendo-client/p/db/index.js";
-
-const hafas = createClient(dbProfile, "trainify-app");
 
 // Load .env manually (no dotenv dependency needed)
 try {
@@ -34,24 +32,49 @@ if (!SPOTIFY_CLIENT_ID || !SPOTIFY_CLIENT_SECRET) {
   process.exit(1);
 }
 
+interface TokenData {
+  access_token: string;
+  refresh_token?: string;
+  expires_in: number;
+  obtained_at: number;
+  scope?: string;
+  [key: string]: unknown;
+}
+
+const hafas = createClient(dbProfile, "trainify-app");
+
 const app = express();
+
+const allowedOrigins = [FRONTEND_URL];
+if (process.env.NODE_ENV !== "production") {
+  allowedOrigins.push("http://localhost:5173", "http://127.0.0.1:5173");
+}
+
 app.use(
   cors({
-    origin: [FRONTEND_URL, "http://localhost:5173", "http://127.0.0.1:5173"],
+    origin: allowedOrigins,
   }),
 );
 
 // In-memory token store (per-session; fine for local dev)
-let tokenData = null;
+let tokenData: TokenData | null = null;
+
+// Exported for testing — reset token state between tests
+export function _resetTokenData(): void {
+  tokenData = null;
+}
+export function _setTokenData(data: TokenData | null): void {
+  tokenData = data;
+}
 
 const SCOPES =
   "user-library-read playlist-modify-private playlist-modify-public";
 
 // 1. Redirect user to Spotify login
-app.get("/auth/login", (_req, res) => {
+app.get("/auth/login", (_req: Request, res: Response) => {
   const params = new URLSearchParams({
     response_type: "code",
-    client_id: SPOTIFY_CLIENT_ID,
+    client_id: SPOTIFY_CLIENT_ID!,
     scope: SCOPES,
     redirect_uri: SPOTIFY_REDIRECT_URI,
     show_dialog: "true",
@@ -60,7 +83,7 @@ app.get("/auth/login", (_req, res) => {
 });
 
 // 2. Spotify redirects here after login — exchange code for tokens
-app.get("/auth/callback", async (req, res) => {
+app.get("/auth/callback", async (req: Request, res: Response) => {
   const { code, error } = req.query;
   if (error || !code) {
     return res.redirect(`${FRONTEND_URL}?error=${error || "no_code"}`);
@@ -91,15 +114,15 @@ app.get("/auth/callback", async (req, res) => {
     return res.redirect(`${FRONTEND_URL}?error=token_exchange_failed`);
   }
 
-  tokenData = await response.json();
-  tokenData.obtained_at = Date.now();
+  const json = await response.json();
+  tokenData = { ...json, obtained_at: Date.now() } as TokenData;
   console.log("Token granted with scopes:", tokenData.scope);
 
   res.redirect(`${FRONTEND_URL}?logged_in=true`);
 });
 
 // 3. Frontend calls this to get the current access token
-app.get("/auth/token", async (_req, res) => {
+app.get("/auth/token", async (_req: Request, res: Response) => {
   if (!tokenData) {
     return res.status(401).json({ error: "Not authenticated" });
   }
@@ -135,17 +158,17 @@ app.get("/auth/token", async (_req, res) => {
     }
   }
 
-  res.json({ access_token: tokenData.access_token });
+  res.json({ access_token: tokenData!.access_token });
 });
 
 // 4. Logout
-app.post("/auth/logout", (_req, res) => {
+app.post("/auth/logout", (_req: Request, res: Response) => {
   tokenData = null;
   res.json({ ok: true });
 });
 
 // 5. Trip lookup via hafas-client (direct DB HAFAS access)
-app.get("/api/trip", async (req, res) => {
+app.get("/api/trip", async (req: Request, res: Response) => {
   const { from, to } = req.query;
   if (!from || !to) {
     return res
@@ -179,8 +202,8 @@ app.get("/api/trip", async (req, res) => {
     const firstLeg = legs[0];
     const lastLeg = legs[legs.length - 1];
 
-    const departure = firstLeg.departure ?? firstLeg.plannedDeparture;
-    const arrival = lastLeg.arrival ?? lastLeg.plannedArrival;
+    const departure = firstLeg.departure ?? firstLeg.plannedDeparture ?? "";
+    const arrival = lastLeg.arrival ?? lastLeg.plannedArrival ?? "";
 
     const depTime = new Date(departure).getTime();
     const arrTime = new Date(arrival).getTime();
@@ -201,7 +224,4 @@ app.get("/api/trip", async (req, res) => {
   }
 });
 
-const PORT = 3001;
-app.listen(PORT, () => {
-  console.log(`Trainify auth server running at http://localhost:${PORT}`);
-});
+export { app, hafas };
