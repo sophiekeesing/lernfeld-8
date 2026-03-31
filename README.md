@@ -110,44 +110,45 @@ lernfeld-8/
 └── README.md
 ```
 
-## MoSCoW — Anforderungen & Umsetzung
+## MoSCoW — Requirements & Implementation
 
 ### ✅ Must Haves
 
-| Anforderung                                                     | Status | Umsetzung                                                                                                                    |
-| --------------------------------------------------------------- | ------ | ---------------------------------------------------------------------------------------------------------------------------- |
-| Ein Commit wird automatisiert in die Testumgebung gebracht (CI) | ✅     | GitHub Actions CI-Pipeline (`.github/workflows/ci.yml`) läuft bei jedem Push auf jeden Branch und bei PRs auf `main`         |
-| Unit Tests werden in der CI-Umgebung automatisiert ausgeführt   | ✅     | 21 Frontend-Tests (Vitest + React Testing Library) + 8 Backend-Tests (Vitest + Supertest) laufen automatisch in der Pipeline |
-| Sequenzdiagramm für die Pipeline erstellt                       | ✅     | Mermaid-Sequenzdiagramm in `docs/pipeline-sequence-diagram.md` inkl. Entwicklung, QA, Protokolle                             |
+| Requirement                                                      | Status | Implementation                                                                                                              |
+| ---------------------------------------------------------------- | ------ | --------------------------------------------------------------------------------------------------------------------------- |
+| A commit is automatically brought into the test environment (CI) | ✅     | GitHub Actions CI pipeline (`.github/workflows/ci.yml`) runs on every push to any branch and on PRs to `main`               |
+| Unit tests are automatically executed in the CI environment      | ✅     | 21 frontend tests (Vitest + React Testing Library) + 8 backend tests (Vitest + Supertest) run automatically in the pipeline |
+| Sequence diagram for the pipeline created                        | ✅     | Mermaid sequence diagram in `docs/pipeline-sequence-diagram.md` including development, QA, and protocols                    |
 
 ### ✅ Should Haves
 
-| Anforderung                                                 | Status | Umsetzung                                                                                                                                                       |
-| ----------------------------------------------------------- | ------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Pipeline enthält mindestens drei QA-Maßnahmen (neben Tests) | ✅     | 7 QA-Maßnahmen: ESLint, Prettier Format-Check, TypeScript Type-Checking (Frontend + Backend), Unit Tests, Integrationstests, Build-Verifikation, Security Audit |
-| Integrationstests werden automatisiert ausgeführt           | ✅     | 8 Backend-Integrationstests (Supertest gegen Express-Routen) in CI                                                                                              |
+| Requirement                                                  | Status | Implementation                                                                                                                                                 |
+| ------------------------------------------------------------ | ------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Pipeline contains at least three QA measures (besides tests) | ✅     | 7 QA measures: ESLint, Prettier format check, TypeScript type-checking (frontend + backend), unit tests, integration tests, build verification, security audit |
+| Integration tests are automatically executed                 | ✅     | 8 backend integration tests (Supertest against Express routes) in CI                                                                                           |
 
 ### ✅ Could Haves
 
-| Anforderung                                  | Status | Umsetzung                                                                                    |
-| -------------------------------------------- | ------ | -------------------------------------------------------------------------------------------- |
-| Continuous Deployment in Produktivumgebung   | ✅     | CD-Pipeline (`.github/workflows/cd.yml`) baut Docker-Images nach erfolgreichem CI auf `main` |
-| Software in Produktivumgebung bereitgestellt | ✅     | Docker Compose Setup (`docker-compose.yml`) — bereit für Deployment                          |
-| Monitoring der Produktionsumgebung           | ✅     | Health-Check-Script (`monitoring/health-check.sh`) prüft Backend- und Frontend-Endpunkte     |
+| Requirement                                 | Status | Implementation                                                                              |
+| ------------------------------------------- | ------ | ------------------------------------------------------------------------------------------- |
+| Continuous Deployment to production         | ✅     | CD pipeline (`.github/workflows/cd.yml`) builds Docker images after successful CI on `main` |
+| Software deployed in production environment | ✅     | Docker Compose setup (`docker-compose.yml`) — ready for deployment                          |
+| Monitoring of production environment        | ✅     | Health-check script (`monitoring/health-check.sh`) checks backend and frontend endpoints    |
 
-### QA-Maßnahmen im Detail
+### Make Commands
 
-Alle können manuell via `make` ausgeführt werden:
+All QA checks and fixes can be run manually via `make`:
 
-| Make-Befehl          | Zweck                                   |
-| -------------------- | --------------------------------------- |
-| `make test`          | Alle Tests (Frontend + Backend)         |
-| `make test-frontend` | Nur Frontend-Unit-Tests                 |
-| `make test-backend`  | Nur Backend-Integrationstests           |
-| `make lint`          | ESLint Code-Qualitätsprüfung            |
-| `make format`        | Prettier Format-Check                   |
-| `make typecheck`     | TypeScript-Prüfung (Frontend + Backend) |
-| `make lft`           | Kombiniert: Lint + Format + Typecheck   |
+| Command               | Description                                                 |
+| --------------------- | ----------------------------------------------------------- |
+| `make test`           | Run all tests (frontend + backend)                          |
+| `make test-frontend`  | Run frontend unit tests only                                |
+| `make test-backend`   | Run backend integration tests only                          |
+| `make test-lint`      | Check for lint issues (ESLint)                              |
+| `make test-format`    | Check for formatting issues (Prettier)                      |
+| `make test-typecheck` | Check for type errors (TypeScript, frontend + backend)      |
+| `make test-lft`       | Combined check: lint + format + typecheck (fails on issues) |
+| `make lft`            | Auto-fix lint & formatting issues, then run typecheck       |
 
 ## License
 

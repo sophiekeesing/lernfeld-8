@@ -1,4 +1,4 @@
-.PHONY: run stop build install dev test test-frontend test-backend lint typecheck format lft
+.PHONY: run stop build install dev test test-frontend test-backend test-lint test-typecheck test-format test-lft lft
 
 # Start everything with Docker
 run:
@@ -40,11 +40,11 @@ test-backend:
 	cd backend && SPOTIFY_CLIENT_ID=test-id SPOTIFY_CLIENT_SECRET=test-secret npm test
 
 # Run ESLint on frontend
-lint:
+test-lint:
 	cd frontend && npm run lint
 
 # Run TypeScript type-checking on both frontend and backend
-typecheck:
+test-typecheck:
 	@echo "══ Frontend Type Check ══"
 	cd frontend && npm run typecheck
 	@echo ""
@@ -52,18 +52,31 @@ typecheck:
 	cd backend && npm run typecheck
 
 # Check code formatting with Prettier
-format:
+test-format:
 	npx prettier --check "frontend/src/**/*.{ts,tsx,css}" "backend/**/*.ts" --ignore-path .gitignore
 
 # ─── Combined QA: Lint + Format + Typecheck ────────────────────
-lft:
+test-lft:
 	@echo "══ 1/3 Lint ══"
-	@$(MAKE) lint
+	@$(MAKE) test-lint
 	@echo ""
 	@echo "══ 2/3 Format ══"
-	@$(MAKE) format
+	@$(MAKE) test-format
 	@echo ""
 	@echo "══ 3/3 Typecheck ══"
-	@$(MAKE) typecheck
+	@$(MAKE) test-typecheck
 	@echo ""
 	@echo "✅ All checks passed"
+
+# ─── Fix: Auto-fix lint & format, then typecheck ───────────────
+lft:
+	@echo "══ 1/3 Fixing Lint Issues ══"
+	cd frontend && npx eslint . --fix
+	@echo ""
+	@echo "══ 2/3 Fixing Formatting ══"
+	npx prettier --write "frontend/src/**/*.{ts,tsx,css}" "backend/**/*.ts" --ignore-path .gitignore
+	@echo ""
+	@echo "══ 3/3 Typecheck ══"
+	@$(MAKE) test-typecheck
+	@echo ""
+	@echo "✅ Lint & format fixed, typecheck passed"
