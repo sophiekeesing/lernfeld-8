@@ -1,6 +1,5 @@
 # 🚆🎵 Trainify
 
-huhu
 A web app that generates a Spotify playlist tailored to the duration of your train journey. Enter your train details, and Trainify picks songs from your liked tracks that fill exactly the travel time.
 
 ## User Experience
