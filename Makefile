@@ -1,6 +1,6 @@
 .PHONY: run stop build install dev
 
-# Start everything with Docker
+# Start everything with Colima and Docker Compose
 run:
 	docker compose up --build
 
@@ -14,8 +14,7 @@ build:
 
 # Install deps locally (no Docker)
 install:
-	cd frontend && npm install
-	cd backend && npm install
+	cd frontend && npm install && cd .. && cd backend && npm install
 
 # Run locally without Docker (needs deps installed)
 dev:
