@@ -79,6 +79,8 @@ lernfeld-8/
 │   ├── src/
 │   │   ├── App.tsx              # Main application component
 │   │   ├── main.tsx             # Entry point
+│   │   ├── setupTests.ts       # Test setup (jest-dom)
+│   │   ├── __tests__/          # Frontend unit tests
 │   │   ├── components/
 │   │   │   ├── LoginPage.tsx    # Spotify login screen
 │   │   │   └── TripForm.tsx     # Trip input & playlist generation
@@ -87,15 +89,66 @@ lernfeld-8/
 │   │       ├── db.ts            # Trip lookup client
 │   │       ├── playlist.ts      # Song picking logic
 │   │       └── spotify.ts       # Spotify Web API client
-│   ├── public/
-│   ├── index.html
-│   ├── vite.config.ts
+│   ├── vitest.config.ts         # Vitest test config
 │   └── package.json
 ├── backend/
-│   └── server.js               # Express server (auth + trip API)
-├── images/                      # Architecture diagrams
+│   ├── app.ts                   # Express app (routes & logic)
+│   ├── server.ts                # Entry point (starts listener)
+│   ├── tsconfig.json            # Backend TypeScript config
+│   ├── vitest.config.ts         # Backend Vitest config
+│   ├── types/                   # Custom type declarations
+│   └── __tests__/               # Backend integration tests
+├── .github/workflows/
+│   ├── ci.yml                   # CI pipeline (lint, format, typecheck, tests)
+│   └── cd.yml                   # CD pipeline (build & deploy)
+├── monitoring/
+│   └── health-check.sh          # Production health-check script
+├── docs/
+│   └── pipeline-sequence-diagram.md  # Pipeline sequence diagram
+├── docker-compose.yml
+├── Makefile                     # Dev & QA commands
 └── README.md
 ```
+
+## MoSCoW — Requirements & Implementation
+
+### ✅ Must Haves
+
+| Requirement                                                      | Status | Implementation                                                                                                              |
+| ---------------------------------------------------------------- | ------ | --------------------------------------------------------------------------------------------------------------------------- |
+| A commit is automatically brought into the test environment (CI) | ✅     | GitHub Actions CI pipeline (`.github/workflows/ci.yml`) runs on every push to any branch and on PRs to `main`               |
+| Unit tests are automatically executed in the CI environment      | ✅     | 21 frontend tests (Vitest + React Testing Library) + 8 backend tests (Vitest + Supertest) run automatically in the pipeline |
+| Sequence diagram for the pipeline created                        | ✅     | Mermaid sequence diagram in `docs/pipeline-sequence-diagram.md` including development, QA, and protocols                    |
+
+### ✅ Should Haves
+
+| Requirement                                                  | Status | Implementation                                                                                                                                                 |
+| ------------------------------------------------------------ | ------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Pipeline contains at least three QA measures (besides tests) | ✅     | 7 QA measures: ESLint, Prettier format check, TypeScript type-checking (frontend + backend), unit tests, integration tests, build verification, security audit |
+| Integration tests are automatically executed                 | ✅     | 8 backend integration tests (Supertest against Express routes) in CI                                                                                           |
+
+### ✅ Could Haves
+
+| Requirement                                 | Status | Implementation                                                                              |
+| ------------------------------------------- | ------ | ------------------------------------------------------------------------------------------- |
+| Continuous Deployment to production         | ✅     | CD pipeline (`.github/workflows/cd.yml`) builds Docker images after successful CI on `main` |
+| Software deployed in production environment | ✅     | Docker Compose setup (`docker-compose.yml`) — ready for deployment                          |
+| Monitoring of production environment        | ✅     | Health-check script (`monitoring/health-check.sh`) checks backend and frontend endpoints    |
+
+### Make Commands
+
+All QA checks and fixes can be run manually via `make`:
+
+| Command               | Description                                                 |
+| --------------------- | ----------------------------------------------------------- |
+| `make test`           | Run all tests (frontend + backend)                          |
+| `make test-frontend`  | Run frontend unit tests only                                |
+| `make test-backend`   | Run backend integration tests only                          |
+| `make test-lint`      | Check for lint issues (ESLint)                              |
+| `make test-format`    | Check for formatting issues (Prettier)                      |
+| `make test-typecheck` | Check for type errors (TypeScript, frontend + backend)      |
+| `make test-lft`       | Combined check: lint + format + typecheck (fails on issues) |
+| `make lft`            | Auto-fix lint & formatting issues, then run typecheck       |
 
 ## License
 
