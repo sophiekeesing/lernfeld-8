@@ -2,6 +2,8 @@
 
 A web app that generates a Spotify playlist tailored to the duration of your train journey. Enter your train details, and Trainify picks songs from your liked tracks that fill exactly the travel time.
 
+**Live:** [https://ske.solutionshosted.de](https://ske.solutionshosted.de)
+
 ## User Experience
 
 The user opens the app and is greeted by a single screen with a **"Login with Spotify"** button. After approving access, they land on the main form where they enter three things:
@@ -20,14 +22,22 @@ They hit **Generate**, and within a few seconds a new playlist appears in their 
 
 ### Frontend
 
-- **React 19 + Vite** — existing setup
+- **React 19 + Vite** — responsive UI with mobile support
 - **TypeScript**
-- Plain **CSS** for styling (no UI library needed)
+- Plain **CSS** for styling (with mobile-first media queries)
 
 ### Backend
 
 - **Node.js + Express** — a small server with just a few endpoints
 - Required because Spotify's OAuth flow needs a `client_secret` which must never be exposed in the browser. The backend handles the token exchange securely.
+
+### Infrastructure
+
+- **Docker** — containerised frontend, backend, and nginx
+- **Nginx** — reverse proxy with SSL termination, routing `ske.solutionshosted.de` → frontend and `api.ske.solutionshosted.de` → backend
+- **Let's Encrypt / Certbot** — automatic HTTPS certificates
+- **GitHub Container Registry (GHCR)** — stores Docker images
+- **GitHub Actions** — CI/CD pipelines for testing and deployment
 
 ### APIs
 
@@ -48,25 +58,74 @@ They hit **Generate**, and within a few seconds a new playlist appears in their 
 
 Spotify liked songs and playlist creation are called directly from the React frontend using the access token.
 
+## Deployment
+
+Trainify is deployed automatically on every push to `main`.
+
+### How it works
+
+1. **CI** (`.github/workflows/ci.yml`) — runs lint, format check, typecheck, and tests on every push
+2. **CD** (`.github/workflows/deploy.yml`) — on push to `main`:
+   - Builds Docker images for `linux/arm64` (cross-compiled via QEMU)
+   - Pushes images to GitHub Container Registry (GHCR)
+   - Copies `docker-compose.deploy.yml` and `nginx.conf` to the server via SCP
+   - SSHs into the server, pulls new images, and restarts containers
+
+### Production stack
+
+| Component    | Role                                           |
+| ------------ | ---------------------------------------------- |
+| **Nginx**    | Reverse proxy, SSL termination, domain routing |
+| **Certbot**  | Let's Encrypt SSL certificates                 |
+| **Frontend** | Vite dev server (port 5173, internal only)     |
+| **Backend**  | Express server (port 3001, internal only)      |
+
+### Domains
+
+| Domain                               | Routes to |
+| ------------------------------------ | --------- |
+| `https://ske.solutionshosted.de`     | Frontend  |
+| `https://api.ske.solutionshosted.de` | Backend   |
+
+### Required GitHub Secrets
+
+| Secret            | Description                    |
+| ----------------- | ------------------------------ |
+| `SERVER_HOST`     | Server IP address              |
+| `SERVER_USER`     | SSH username                   |
+| `SSH_PRIVATE_KEY` | SSH private key for deployment |
+
+### Server `.env` file
+
+A `.env` file must exist at `/root/app/.env` on the server (not committed to git):
+
+```
+SPOTIFY_CLIENT_ID=...
+SPOTIFY_CLIENT_SECRET=...
+SPOTIFY_REDIRECT_URI=https://api.ske.solutionshosted.de/auth/callback
+FRONTEND_URL=https://ske.solutionshosted.de
+```
+
 ## Key Implementation Details
 
-1. **Spotify developer account** — register at [developer.spotify.com](https://developer.spotify.com), get a `client_id` and `client_secret`, set redirect URI to `http://localhost:3000/auth/callback`
+1. **Spotify developer account** — register at [developer.spotify.com](https://developer.spotify.com), get a `client_id` and `client_secret`, set redirect URI to `https://api.ske.solutionshosted.de/auth/callback`
 2. **Scopes** — `user-library-read` (read liked songs), `playlist-modify-private` and `playlist-modify-public` (create playlists)
 3. **Duration math** — the HAFAS response includes departure and arrival timestamps; the backend subtracts them to get trip minutes, then the frontend greedily picks songs until total track duration fills that window
 4. **Keyword filtering** — Spotify's liked songs have track name and artist name but not genre tags directly; filter by matching keyword against track/artist names, or optionally call `GET /artists/{id}` to get genre tags
 
-## Getting Started
+## Getting Started (Local Development)
 
 ```bash
 # Clone the repo
 git clone https://github.com/sophiekeesing/lernfeld-8.git
-cd lernfeld-8/frontend
+cd lernfeld-8
 
-# Install dependencies
-npm install
+# Start everything with Docker
+make run
 
-# Start dev server
-npm run dev
+# Or start frontend and backend separately
+cd frontend && npm install && npm run dev
+cd backend && npm install && npx tsx server.ts
 ```
 
 The app will be available at `http://localhost:5173`.
@@ -100,12 +159,14 @@ lernfeld-8/
 │   └── __tests__/               # Backend integration tests
 ├── .github/workflows/
 │   ├── ci.yml                   # CI pipeline (lint, format, typecheck, tests)
-│   └── cd.yml                   # CD pipeline (build & deploy)
+│   └── deploy.yml               # CD pipeline (build, push to GHCR, deploy via SSH)
+├── nginx.conf                   # Nginx reverse proxy config (SSL + domain routing)
+├── docker-compose.yml           # Local development (builds from source)
+├── docker-compose.deploy.yml    # Production (pulls GHCR images, nginx, certbot)
 ├── monitoring/
 │   └── health-check.sh          # Production health-check script
 ├── docs/
 │   └── pipeline-sequence-diagram.md  # Pipeline sequence diagram
-├── docker-compose.yml
 ├── Makefile                     # Dev & QA commands
 └── README.md
 ```
@@ -129,11 +190,11 @@ lernfeld-8/
 
 ### ✅ Could Haves
 
-| Requirement                                 | Status | Implementation                                                                              |
-| ------------------------------------------- | ------ | ------------------------------------------------------------------------------------------- |
-| Continuous Deployment to production         | ✅     | CD pipeline (`.github/workflows/cd.yml`) builds Docker images after successful CI on `main` |
-| Software deployed in production environment | ✅     | Docker Compose setup (`docker-compose.yml`) — ready for deployment                          |
-| Monitoring of production environment        | ✅     | Health-check script (`monitoring/health-check.sh`) checks backend and frontend endpoints    |
+| Requirement                                 | Status | Implementation                                                                                                                                     |
+| ------------------------------------------- | ------ | -------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Continuous Deployment to production         | ✅     | Deploy pipeline (`.github/workflows/deploy.yml`) builds ARM64 Docker images, pushes to GHCR, and deploys to server via SSH on every push to `main` |
+| Software deployed in production environment | ✅     | Live at [https://ske.solutionshosted.de](https://ske.solutionshosted.de) with nginx reverse proxy, SSL via Let's Encrypt, and Docker Compose       |
+| Monitoring of production environment        | ✅     | Health-check script (`monitoring/health-check.sh`) checks backend and frontend endpoints                                                           |
 
 ### Make Commands
 
