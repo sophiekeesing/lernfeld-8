@@ -1,12 +1,22 @@
 services:
+  # --- YOUR FRONTEND ---
   frontend:
     image: ghcr.io/sophiekeesing/lernfeld-8/frontend:latest
-    ports:
-      - "80:80"
     restart: always
+    # We don't need to expose ports to the public, Nginx will talk to it internally
 
+  # --- YOUR BACKEND ---
   backend:
     image: ghcr.io/sophiekeesing/lernfeld-8/backend:latest
-    ports:
-      - "5000:5000"
     restart: always
+
+  # --- THE RECEPTIONIST (NGINX) ---
+  nginx:
+    image: nginx:latest
+    ports:
+      - "80:80" # Standard web port
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      - frontend
+      - backend
