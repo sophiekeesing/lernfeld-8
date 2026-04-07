@@ -9,14 +9,30 @@ services:
   backend:
     image: ghcr.io/sophiekeesing/lernfeld-8/backend:latest
     restart: always
+    env_file:
+      - .env
 
   # --- THE RECEPTIONIST (NGINX) ---
   nginx:
     image: nginx:latest
     ports:
-      - "80:80" # Standard web port
+      - "80:80"
+      - "443:443"
     volumes:
       - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - certbot-webroot:/var/www/certbot:ro
+      - certbot-certs:/etc/letsencrypt:ro
     depends_on:
       - frontend
       - backend
+
+  # --- SSL CERTIFICATE MANAGER ---
+  certbot:
+    image: certbot/certbot
+    volumes:
+      - certbot-webroot:/var/www/certbot
+      - certbot-certs:/etc/letsencrypt
+
+volumes:
+  certbot-webroot:
+  certbot-certs:
