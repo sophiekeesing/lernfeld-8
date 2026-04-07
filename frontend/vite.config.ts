@@ -6,5 +6,6 @@ export default defineConfig({
   plugins: [react()],
   server: {
     host: true, // needed for Docker
+    allowedHosts: ["ske.solutionshosted.de"],
   },
 });
