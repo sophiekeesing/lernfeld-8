@@ -3,7 +3,8 @@ services:
   frontend:
     image: ghcr.io/sophiekeesing/lernfeld-8/frontend:latest
     restart: always
-    # We don't need to expose ports to the public, Nginx will talk to it internally
+    environment:
+      - VITE_BACKEND_URL=https://api.ske.solutionshosted.de
 
   # --- YOUR BACKEND ---
   backend:
