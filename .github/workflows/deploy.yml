@@ -6,7 +6,6 @@ on:
 
 env:
   REGISTRY: ghcr.io
-  # Replace USER/REPO with your actual GitHub username and repository name
   FRONTEND_IMAGE: ghcr.io/sophiekeesing/lernfeld-8/frontend
   BACKEND_IMAGE: ghcr.io/sophiekeesing/lernfeld-8/backend
 
